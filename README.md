@@ -22,7 +22,7 @@ pnpm install
 ```
 * CORS configuration steps as shown in this **FIXME** issue https://github.com/ltfschoen/MUDTest/issues/1 
 
-* Also required to access the DApp in the Docker container from the host machine is to modify its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",` (see https://github.com/latticexyz/mud/issues/859).
+* Also required to access the DApp in the Docker container from the host machine is to modify its package.json file manually by adding `--host 0.0.0.0` (see https://github.com/vitejs/vite/issues/12557) so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",` (see https://github.com/latticexyz/mud/issues/859).
 * After doing that continue...
 ```bash
 pnpm initialize
@@ -117,7 +117,7 @@ case ":$PATH:" in
 esac
 ```
 * Then run `source ~/.bashrc`
-* Note: Possibly could have tried doing `pnpm config set global-bin-dir ~/pnpm` instead
+* Note: Possibly could have tried doing `pnpm config set global-bin-dir ~/.local/share/pnpm` instead, where `~/.local/share/pnpm` is `$PNPM_HOME`
 
 #### Links
 
