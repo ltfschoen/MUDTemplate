@@ -76,6 +76,19 @@ pnpm run dev
 
 ## Miscellaneous
 
+### Foundry
+
+#### Links
+
+* Misc
+  * https://getfoundry.sh/
+  * https://github.com/foundry-rs/foundry
+  * https://book.getfoundry.sh/
+  * https://book.getfoundry.sh/getting-started/installation
+* Forge, Cast, Anvil
+  * https://book.getfoundry.sh/anvil/
+  * https://book.getfoundry.sh/reference/anvil/
+
 ### MUD
 
 * Definitions
@@ -110,6 +123,15 @@ pnpm run dev
 * Other notes
   * https://github.com/latticexyz/emojimon/pull/7/files `mud tsgen --configPath mud.config.mts --out ../client/src/mud`
 
+#### Links
+
+* MUD v1 (legacy)
+  * https://mud.dev/guides/getting_started/
+* MUD v2
+  * https://github.com/latticexyz/mud
+  * https://v2.mud.dev/what-is-mud
+  * https://v2.mud.dev/mode
+  * https://v2.mud.dev/store
 
 ### Docker
 
