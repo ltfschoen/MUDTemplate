@@ -11,25 +11,27 @@ export default defineConfig({
     cors: {
       // origin: ["ws://127.0.0.1:8545/", "http://127.0.0.1:8545/", "http://localhost:3000/"],
       origin: "*",
-      // methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-      methods: "*",
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      // methods: "*",
       // allowedHeaders: ['Content-Type', 'Authorization'],
-      allowedHeaders: "*",
-      credentials: true,
+      // allowedHeaders: "*",
+      // credentials: true,
       // exposedHeaders: ['Content-Range', 'X-Content-Range'],
-      exposedHeaders: "*",
+      // exposedHeaders: "*",
       // preflightContinue: true,
       // optionsSuccessStatus: 204
     },
     // hmr: {
     //   clientPort: 8545,
     //   port: 3000,
-    //   overlay: true,
-    // }
+    //   overlay: false,
+    // },
     // proxy: {
     //   '/socket.io': {
-    //     target: 'ws://127.0.0.1:8545',
+    //     target: 'ws://localhost:8545',
+    //     changeOrigin: true,
     //     ws: true,
+    //     xfwd: true,
     //   },
     // },
     // strictPort: false,
