@@ -2,35 +2,91 @@
 
 ## Setup
 
+### Use Existing MyProject
+
+* Install [Docker](https://docs.docker.com/get-docker/)
+* Fork and/or clone repo
+```
+git clone https://github.com/ltfschoen/MUDTest
+cd MUDTest
+```
+* Run a Docker container:
 ```bash
 touch .env && cp .env.example .env
 ./docker.sh
 docker ps -a
+```
+* Enter the Docker container shell
+```bash
 docker exec -it foundry /bin/bash
 ```
-
-* Note: Node.js v18.x is supported
-* Run the following in Docker container
+* Setup project in Docker container
 ```bash
-mkdir projects && cd projects
+mkdir -p projects && cd projects
+pnpm setup
+source ~/.bashrc
 pnpm config set store-dir ~/pnpm
-pnpm create mud@canary my-project
+pnpm store prune
+pnpm config set global-bin-dir ~/.local/share/pnpm
 cd my-project
 rm -rf node_modules
-pnpm install --global run-pty
-pnpm install
 ```
-* CORS configuration steps as shown in this **FIXME** issue https://github.com/ltfschoen/MUDTest/issues/1 
-
-* Also required to access the DApp in the Docker container from the host machine is to modify its package.json file manually by adding `--host 0.0.0.0` (see https://github.com/vitejs/vite/issues/12557) so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",` (see https://github.com/latticexyz/mud/issues/859).
-* After doing that continue...
+* Configure CORS following steps as shown in this **FIXME** issue https://github.com/ltfschoen/MUDTest/issues/1 
+* Expose DApp in Docker container for access from host machine by modifying its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
+* Run the DApp
 ```bash
 pnpm initialize
+pnpm install --global run-pty
+pnpm install
 pnpm run dev
 ```
-* Note: If you click 1-pnpm dev:client then it should show that it is exposed at http://localhost:3000 and maybe http://172.17.0.2:3000, where 172.17.0.2 is the eth0 IP address shown if you run `ifconfig`
-* If any errors running `pnpm run dev` in the dashboard, then press CTRL+C and then Enter to restart the dashboard and the error should disappear
 * Go to http://localhost:3000
+* View browser console logs and inspect Docker container terminal to check for errors
+
+### Create New MyCustomProject
+
+* Install [Docker](https://docs.docker.com/get-docker/)
+* Fork and/or clone repo
+```
+git clone https://github.com/ltfschoen/MUDTest
+cd MUDTest
+```
+* Run a Docker container:
+```bash
+touch .env && cp .env.example .env
+./docker.sh
+docker ps -a
+```
+* Enter the Docker container shell
+```bash
+docker exec -it foundry /bin/bash
+```
+* Run the following in Docker container
+```bash
+mkdir -p projects && cd projects
+pnpm setup
+source ~/.bashrc
+pnpm config set store-dir ~/pnpm
+pnpm store prune
+pnpm config set global-bin-dir ~/.local/share/pnpm
+pnpm create mud@canary my-custom-project
+cd my-custom-project
+rm -rf node_modules
+```
+* Expose DApp in Docker container for access from host machine by modifying its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
+* Run the DApp
+```bash
+pnpm initialize
+pnpm install --global run-pty
+pnpm install
+pnpm run dev
+```
+* Go to http://localhost:3000
+* View browser console logs and inspect Docker container terminal to check for errors
+
+## Miscellaneous
+
+### Visual Studio Code Configuration
 
 * In my-project/.vscode/settings.json, update it to be: 
 ```json
@@ -46,9 +102,6 @@ pnpm run dev
   "solidity.packageDefaultDependenciesDirectory": "./packages/contracts"
 }
 ```
-* In my-project/packages/contracts/foundry.toml, update `solc_version` value to match that `solidity.compileUsingRemoteVersion`. See https://github.com/foundry-rs/foundry/blob/58a272997516046fd745f4b3c37f91d0eb113358/config/src/lib.rs#L179
-
-## Miscellaneous
 
 ### Foundry
 
@@ -90,6 +143,8 @@ pnpm run dev
       ```
 
 * Other notes:
+  * In my-project/packages/contracts/foundry.toml, update `solc_version` value to match that `solidity.compileUsingRemoteVersion`. See https://github.com/foundry-rs/foundry/blob/58a272997516046fd745f4b3c37f91d0eb113358/config/src/lib.rs#L179
+  * Note: Node.js v18.x is supported
   * All the MUD v2 is in the main branch of https://github.com/latticexyz/mud. The tags do not show up since it is released as canary for now, but you can see the versions on https://www.npmjs.com/package/@latticexyz/world?activeTab=versions. To use MUD v2 you would run `pnpm create mud@canary my-project`, since PNPM is preferable over `Yarn`. If store-cache hasn't been published, run `pnpm create mud@2.0.0-alpha.1.93 my-project`:
   * Use mud.config.ts to edit your Store config directly https://v2.mud.dev/store/installation
   * Note: Run `pnpm mud set-version -v canary` in both the client and contracts package of your project then run `pnpm install` at the root to update your project to the latest canary version
@@ -99,25 +154,33 @@ pnpm run dev
 
 #### Troubleshooting
 
-* If you get the following error when running `pnpm run dev`, then it may be because you previously built the files on a host machine and copied them to a Docker container.
-  ```bash
-  sh: 1: run-pty: not found
-   ELIFECYCLE  Command failed.
-  root@docker-desktop:/opt/projects/my-first-mud-project# pnpm install --global run-pty
-   ERR_PNPM_NO_GLOBAL_BIN_DIR  Unable to find the global bin directory
-  Run "pnpm setup" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.
+* PNPM global bin directory error
+  * If you get the following error when running `pnpm run dev`, then it may be because you previously built the files on a host machine and copied them to a Docker container.
+    ```bash
+    sh: 1: run-pty: not found
+     ELIFECYCLE  Command failed.
+    root@docker-desktop:/opt/projects/my-first-mud-project# pnpm install --global run-pty
+     ERR_PNPM_NO_GLOBAL_BIN_DIR  Unable to find the global bin directory
+    Run "pnpm setup" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.
+    ```
+  * Solution is to run `pnpm setup`, which added this to ~/.bashrc:
   ```
-* Solution is to run `pnpm setup`, which added this to ~/.bashrc:
-```
-# pnpm
-export PNPM_HOME="/root/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-```
-* Then run `source ~/.bashrc`
-* Note: Possibly could have tried doing `pnpm config set global-bin-dir ~/.local/share/pnpm` instead, where `~/.local/share/pnpm` is `$PNPM_HOME`
+  # pnpm
+  export PNPM_HOME="/root/.local/share/pnpm"
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+  esac
+  ```
+  * Then run the following where `~/.local/share/pnpm` is `$PNPM_HOME`
+    ```bash
+    source ~/.bashrc
+    pnpm config set global-bin-dir ~/.local/share/pnpm
+    ```
+
+* PNPM dashboard errors
+  * Note: If after running DApp with `pnpm run dev`, if you click 1-pnpm dev:client then it should show that it is exposed at http://localhost:3000 and maybe http://172.17.0.2:3000, where 172.17.0.2 is the eth0 IP address shown if you run `ifconfig`
+  * If any errors running `pnpm run dev` in the dashboard, then press CTRL+C and then Enter to restart the dashboard and the error should disappear
 
 #### Links
 
