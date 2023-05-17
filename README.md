@@ -114,6 +114,28 @@ pnpm run dev
 * Other notes
   * https://github.com/latticexyz/emojimon/pull/7/files `mud tsgen --configPath mud.config.mts --out ../client/src/mud`
 
+#### Troubleshooting
+
+* If you get the following error when running `pnpm run dev`, then it may be because you previously built the files on a host machine and copied them to a Docker container.
+  ```bash
+  sh: 1: run-pty: not found
+   ELIFECYCLE  Command failed.
+  root@docker-desktop:/opt/projects/my-first-mud-project# pnpm install --global run-pty
+   ERR_PNPM_NO_GLOBAL_BIN_DIR  Unable to find the global bin directory
+  Run "pnpm setup" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.
+  ```
+* Solution is to run `pnpm setup`, which added this to ~/.bashrc:
+```
+# pnpm
+export PNPM_HOME="/root/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+```
+* Then run `source ~/.bashrc`
+* Note: Possibly could have tried doing `pnpm config set global-bin-dir ~/pnpm` instead
+
 #### Links
 
 * MUD v1 (legacy)
