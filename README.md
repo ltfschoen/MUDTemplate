@@ -20,25 +20,8 @@ rm -rf node_modules
 pnpm install --global run-pty
 pnpm install
 ```
-* FIXME - CORS configuration
-  * At this stage to avoid a CORS issue accessing the DApp in the Docker container from the host machine (see https://github.com/latticexyz/mud/issues/860), it is necessary to do https://github.com/latticexyz/mud/issues/860#issuecomment-1550812789 by editing my-project/node_modules/.pnpm/vite@4.2.1/node_modules/vite/dist/client/client.mjs by changing the line `const socketHost = ${__HMR_HOSTNAME__ || importMetaUrl.hostname}:${hmrPort || importMetaUrl.port}${__HMR_BASE__};` to instead be `const socketHost = '127.0.0.1:8545';`. Relates to https://github.com/vitejs/vite/issues/652 that hasn't been resolved yet and possibly should be re-opened
-  * It is also necessary to modify packages/client/vite.config.ts. See the Vitejs docs https://vitejs.dev/config/server-options.html#server-cors
-  ```bash
-  export default defineConfig({
-    ...
-    server: {
-    ...
-    cors: {
-      # origin: [/localhost:8545$/, /localhost:3000$/, /127.0.0.1:8545$/],
-      origin: "*",
-      methods: ['GET', HEAD, 'PUT', 'PATCH', 'POST', 'DELETE'],
-      allowedHeaders: ['Content-Type', 'Authorization']
-    },
-    ...
-    },
-    ...
-  })
-  ```
+* CORS configuration steps as shown in this **FIXME** issue https://github.com/ltfschoen/MUDTest/issues/1 
+
 * Also required to access the DApp in the Docker container from the host machine is to modify its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",` (see https://github.com/latticexyz/mud/issues/859).
 * After doing that continue...
 ```bash
