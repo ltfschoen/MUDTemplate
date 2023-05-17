@@ -2,21 +2,12 @@
 
 ## Setup
 
-* Non-Docker Compose approach
 ```bash
 touch .env && cp .env.example .env
 ./docker.sh
 docker ps -a
 docker exec -it foundry /bin/bash
 ```
-
-<!-- * Docker Compose approach (yet to test if this works now that `network_mode: host` has been removed from docker-compose.yml)
-```bash
-touch .env && cp .env.example .env
-./docker-compose.sh
-docker ps -a
-docker exec -it foundry /bin/bash
-``` -->
 
 * Note: Node.js v18.x is supported
 * Run the following in Docker container
