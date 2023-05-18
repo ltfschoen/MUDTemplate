@@ -27,7 +27,7 @@ docker run -it -d \
 	--name foundry \
 	--publish 0.0.0.0:8545:8545 \
 	--publish 0.0.0.0:3000:3000 \
-	--volume $PWD:/opt:rw \
+	--volume ${PWD}:/opt:rw \
 	foundry:latest
 if [ $? -ne 0 ]; then
     kill "$PPID"; exit 1;
