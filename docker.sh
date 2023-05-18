@@ -10,7 +10,17 @@ source $(dirname "$0")/.env
 
 printf "\n*** Started building Docker container."
 printf "\n*** Please wait... \n***"
-docker build -f ./docker/Dockerfile . && \
+
+# https://stackoverflow.com/a/25554904/3208553
+set +e
+bash -e <<TRY
+  docker build -f ./docker/Dockerfile ./
+TRY
+if [ $? -ne 0 ]; then
+	printf "\n*** Detected error running 'docker build'. Trying 'docker buildx' instead...\n"
+	docker buildx build -f ./docker/Dockerfile ./
+fi
+
 docker run -it -d \
 	--env-file "./.env" \
 	--hostname foundry \

@@ -36,8 +36,8 @@ WORKDIR /opt
 # RUN --mount=type=cache,target="${HOME}/.cargo/registry" \
 #     --mount=type=cache,target="${HOME}/.cargo/git" \
 #     # --mount=type=cache,target=/opt/foundry/target \
-RUN apt-get -y update; \
-    # apt-get -y upgrade; \
+RUN apt-get -y update --fix-missing && \
+    apt-get -y upgrade && \
     apt-get install -y --no-install-recommends \
     libssl-dev make cmake graphviz \
     git pkg-config curl time rhash ca-certificates jq \
