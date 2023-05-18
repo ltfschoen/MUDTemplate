@@ -31,14 +31,15 @@ pnpm config set global-bin-dir ~/.local/share/pnpm
 cd my-project
 rm -rf node_modules
 ```
-* Configure CORS following steps as shown in this **FIXME** issue https://github.com/ltfschoen/MUDTest/issues/1 
-* Expose DApp in Docker container for access from host machine by modifying its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
+* Configure CORS for the Vite.js DApp frontend if necessary by configuring ./projects/my-project/packages/client/vite.config.ts. See https://vitejs.dev/config/server-options.html#server-cors 
+* Manually modify the file projects/my-project/package.json by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. 
+  * Note: This exposes the DApp in in the Docker container for access from the host machine. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
 * Run the DApp
 ```bash
 pnpm initialize
 pnpm install --global run-pty
 pnpm install
-pnpm run dev
+export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
 ```
 * Go to http://localhost:3000
 * View browser console logs and inspect Docker container terminal to check for errors
@@ -73,13 +74,15 @@ pnpm create mud@canary my-custom-project
 cd my-custom-project
 rm -rf node_modules
 ```
-* Expose DApp in Docker container for access from host machine by modifying its package.json file manually by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
+* Configure CORS for the Vite.js DApp frontend if necessary by configuring ./projects/my-project/packages/client/vite.config.ts. See https://vitejs.dev/config/server-options.html#server-cors 
+* Manually modify the file projects/my-project/package.json by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. 
+  * Note: This exposes the DApp in in the Docker container for access from the host machine. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
 * Run the DApp
 ```bash
 pnpm initialize
 pnpm install --global run-pty
 pnpm install
-pnpm run dev
+export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
 ```
 * Go to http://localhost:3000
 * View browser console logs and inspect Docker container terminal to check for errors
@@ -182,6 +185,9 @@ pnpm run dev
   * Note: If after running DApp with `pnpm run dev`, if you click 1-pnpm dev:client then it should show that it is exposed at http://localhost:3000 and maybe http://172.17.0.2:3000, where 172.17.0.2 is the eth0 IP address shown if you run `ifconfig`
   * If any errors running `pnpm run dev` in the dashboard, then press CTRL+C and then Enter to restart the dashboard and the error should disappear
 
+* CORS error `Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://127.0.0.1:8545/. (Reason: CORS request did not succeed). Status code: (null)`
+  * Refer to solution here of running with `export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev` https://github.com/vitejs/vite/discussions/13240#discussioncomment-5934467
+
 #### Links
 
 * MUD v1 (legacy)
@@ -191,6 +197,8 @@ pnpm run dev
   * https://v2.mud.dev/what-is-mud
   * https://v2.mud.dev/mode
   * https://v2.mud.dev/store
+* Lattice
+  * https://www.npmjs.com/package/@latticexyz
 
 ### Docker
 
