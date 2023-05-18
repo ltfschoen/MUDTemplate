@@ -1,11 +1,19 @@
 # MUD v2 DApp (using Docker)
+============
 
-## Setup
+## Table of Contents
 
-### Use Existing MyProject
+  * [Create New MUD v2 Project](#create-new-project)
+  * [Configure Visual Studio Code](#vscode)
+  * [Docker Tips](#docker-tips)
+  * [Miscellaneous Notes for Lattice, UD, and Foundry](#misc-notes)
+  * [Troubleshooting](#troubleshooting)
+  * [Links Unsorted](#links-unsorted)
+
+### Create New Project <a id="create-new-project"></a>
 
 * Install [Docker](https://docs.docker.com/get-docker/)
-* Fork and/or clone repo
+* Fork and/or clone repo. If you fork then replace with your fork link below 
 ```
 git clone https://github.com/ltfschoen/MUDTest
 cd MUDTest
@@ -20,7 +28,7 @@ docker ps -a
 ```bash
 docker exec -it foundry /bin/bash
 ```
-* Setup project in Docker container
+* Run the following in Docker container. Change `my-project` to your desired project name.
 ```bash
 mkdir -p projects && cd projects
 pnpm setup
@@ -28,68 +36,22 @@ source ~/.bashrc
 pnpm config set store-dir ~/pnpm
 pnpm store prune
 pnpm config set global-bin-dir ~/.local/share/pnpm
+pnpm create mud@canary my-project
 cd my-project
 rm -rf node_modules
 ```
-* Configure CORS for the Vite.js DApp frontend if necessary by configuring ./projects/my-project/packages/client/vite.config.ts. See https://vitejs.dev/config/server-options.html#server-cors 
-* Manually modify the file projects/my-project/package.json by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. 
+* Manually modify the file projects/my-project/packages/client/package.json by adding `--host 0.0.0.0` so it changes to `"dev": "vite --host 0.0.0.0",` instead of just `"dev": "vite",`. 
   * Note: This exposes the DApp in in the Docker container for access from the host machine. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
 * Run the DApp
 ```bash
 pnpm initialize
-pnpm install --global run-pty
 pnpm install
 export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
 ```
 * Go to http://localhost:3000
 * View browser console logs and inspect Docker container terminal to check for errors
 
-### Create New MyCustomProject
-
-* Install [Docker](https://docs.docker.com/get-docker/)
-* Fork and/or clone repo
-```
-git clone https://github.com/ltfschoen/MUDTest
-cd MUDTest
-```
-* Run a Docker container:
-```bash
-touch .env && cp .env.example .env
-./docker.sh
-docker ps -a
-```
-* Enter the Docker container shell
-```bash
-docker exec -it foundry /bin/bash
-```
-* Run the following in Docker container
-```bash
-mkdir -p projects && cd projects
-pnpm setup
-source ~/.bashrc
-pnpm config set store-dir ~/pnpm
-pnpm store prune
-pnpm config set global-bin-dir ~/.local/share/pnpm
-pnpm create mud@canary my-custom-project
-cd my-custom-project
-rm -rf node_modules
-```
-* Configure CORS for the Vite.js DApp frontend if necessary by configuring ./projects/my-project/packages/client/vite.config.ts. See https://vitejs.dev/config/server-options.html#server-cors 
-* Manually modify the file projects/my-project/package.json by adding `--host 0.0.0.0` so it changes to `"dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",` instead of just `"dev:client": "pnpm --filter 'client' run dev",`. 
-  * Note: This exposes the DApp in in the Docker container for access from the host machine. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
-* Run the DApp
-```bash
-pnpm initialize
-pnpm install --global run-pty
-pnpm install
-export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
-```
-* Go to http://localhost:3000
-* View browser console logs and inspect Docker container terminal to check for errors
-
-## Miscellaneous
-
-### Visual Studio Code Configuration
+### Configure Visual Studio Code <a id="vscode"></a>
 
 * In my-project/.vscode/settings.json, update it to be: 
 ```json
@@ -106,20 +68,34 @@ export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
 }
 ```
 
-### Foundry
+### Docker Tips <a id="docker-tips"></a>
 
-#### Links
+* Delete Docker Container 
+```
+docker stop foundry && docker rm foundry
+```
+* Previous Docker container
+```
+CONTAINER_ID=$(docker ps -n=1 -q)
+echo $CONTAINER_ID
+```
+* Show IP address. This may be provided as an environment variable with `-e` option
+```
+HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+echo $HOST_IP
+```
+* [Check IP Address macOS](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach)
+```
+brew install iproute2mac
+```
+* Show bridge IP address
+```bash
+docker network inspect bridge | grep Gateway
+```
+* Note: It is not necessary to use `--add-host=host.docker.internal:host-gateway` or `expose <PORT>`
+* Do not try to use `--network host` on macOS, since _"The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server."_
 
-* Misc
-  * https://getfoundry.sh/
-  * https://github.com/foundry-rs/foundry
-  * https://book.getfoundry.sh/
-  * https://book.getfoundry.sh/getting-started/installation
-* Forge, Cast, Anvil
-  * https://book.getfoundry.sh/anvil/
-  * https://book.getfoundry.sh/reference/anvil/
-
-### MUD
+### Miscellaneous Notes for Lattice, MUD, and Foundry<a id="misc-notes"></a>
 
 * Definitions
     * MODE - is a service that mirrors the state of a Store in a Postgres database. Clients query directly without requiring Ethereum JSON-RPC
@@ -146,16 +122,43 @@ export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
       ```
 
 * Other notes:
+  * If you choose to use the React template, then changes to the upstream template code occurs here https://github.com/latticexyz/mud/commits/main/templates/react
   * In my-project/packages/contracts/foundry.toml, update `solc_version` value to match that `solidity.compileUsingRemoteVersion`. See https://github.com/foundry-rs/foundry/blob/58a272997516046fd745f4b3c37f91d0eb113358/config/src/lib.rs#L179
   * Note: Node.js v18.x is supported
+  * Note: Additional dependencies may be required such as: `pnpm install --global concurrently wait-port`
   * All the MUD v2 is in the main branch of https://github.com/latticexyz/mud. The tags do not show up since it is released as canary for now, but you can see the versions on https://www.npmjs.com/package/@latticexyz/world?activeTab=versions. To use MUD v2 you would run `pnpm create mud@canary my-project`, since PNPM is preferable over `Yarn`. If store-cache hasn't been published, run `pnpm create mud@2.0.0-alpha.1.93 my-project`:
   * Use mud.config.ts to edit your Store config directly https://v2.mud.dev/store/installation
   * Note: Run `pnpm mud set-version -v canary` in both the client and contracts package of your project then run `pnpm install` at the root to update your project to the latest canary version
+  * If necessary, configure CORS for the Vite.js DApp frontend by configuring ./projects/my-project/packages/client/vite.config.ts. See https://vitejs.dev/config/server-options.html#server-cors, then run `pnpm store prune` and restart the DApp. Open to all origins with: `cors: { origin: "*", methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'] },`.
+  * CORS configuration may include adding `"proxy": "http://<HOST>:<PORT>",` in a package.json file and updating <your-project>/packages/client/vite.config.ts with a `cors` configuration with keys and values like the below example and replacing <PORT> with an actual port. The below example is not intended to actually work. Refer to Vite.js configuration documentation for more information https://vitejs.dev/config/server-options.html#server-cors, and also https://github.com/http-party/node-http-proxy#options
+    ```
+    cors: {
+      // origin: ["ws://127.0.0.1:<PORT>/", "http://127.0.0.1:<PORT>/"],
+      origin: "*",
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+      exposedHeaders: ['Content-Range', 'X-Content-Range'],
+      preflightContinue: true,
+      optionsSuccessStatus: 204
+    },
+    hmr: {
+      clientPort: <PORT>,
+      port: <PORT>,
+      overlay: false,
+    },
+    proxy: {
+      '/socket.io': {
+        target: 'ws://localhost:<PORT>',
+        changeOrigin: true,
+        ws: true,
+        xfwd: true,
+      },
+    },
+    strictPort: false,
+    ```
 
-* Other notes
-  * https://github.com/latticexyz/emojimon/pull/7/files `mud tsgen --configPath mud.config.mts --out ../client/src/mud`
-
-#### Troubleshooting
+### Troubleshooting <a id="troubleshooting"></a>
 
 * PNPM global bin directory error
   * If you get the following error when running `pnpm run dev`, then it may be because you previously built the files on a host machine and copied them to a Docker container.
@@ -188,7 +191,7 @@ export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
 * CORS error `Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://127.0.0.1:8545/. (Reason: CORS request did not succeed). Status code: (null)`
   * Refer to solution here of running with `export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev` https://github.com/vitejs/vite/discussions/13240#discussioncomment-5934467
 
-#### Links
+### Links Unsorted <a id="links-unsorted"></a>
 
 * MUD v1 (legacy)
   * https://mud.dev/guides/getting_started/
@@ -199,32 +202,14 @@ export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev
   * https://v2.mud.dev/store
 * Lattice
   * https://www.npmjs.com/package/@latticexyz
-
-### Docker
-
-* Delete Docker Container 
-```
-docker stop foundry && docker rm foundry
-```
-* Previous Docker container
-```
-CONTAINER_ID=$(docker ps -n=1 -q)
-echo $CONTAINER_ID
-```
-* Show IP address. This may be provided as an environment variable with `-e` option
-```
-HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-echo $HOST_IP
-```
-* Show bridge IP address
-```bash
-docker network inspect bridge | grep Gateway
-```
-* Note: It is not necessary to use `--add-host=host.docker.internal:host-gateway` or `expose <PORT>`
-* Do not try to use `--network host` on macOS, since _"The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server."_
-
-### Networking
-* [Check IP Address macOS](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach)
-```
-brew install iproute2mac
-```
+* Foundry
+  * https://getfoundry.sh/
+  * https://github.com/foundry-rs/foundry
+  * https://book.getfoundry.sh/
+  * https://book.getfoundry.sh/getting-started/installation
+* Forge, Cast, Anvil
+  * https://book.getfoundry.sh/anvil/
+  * https://book.getfoundry.sh/reference/anvil/
+* Example Projects
+  * https://github.com/latticexyz/emojimon
+  * https://github.com/latticexyz/opcraft

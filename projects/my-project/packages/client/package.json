@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "initialize": "pnpm build",
     "preview": "vite preview",
     "test": "tsc --noEmit"

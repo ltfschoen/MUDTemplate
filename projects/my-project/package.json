@@ -4,7 +4,7 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "dev": "run-pty % pnpm dev:node % pnpm dev:client % pnpm dev:contracts",
-    "dev:client": "pnpm --filter 'client' run dev --host 0.0.0.0",
+    "dev:client": "pnpm --filter 'client' run dev",
     "dev:contracts": "pnpm --filter 'contracts' dev",
     "dev:node": "pnpm --filter 'contracts' devnode",
     "initialize": "pnpm recursive run initialize",

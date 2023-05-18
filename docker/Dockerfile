@@ -51,6 +51,7 @@ RUN apt-get -y update --fix-missing && \
     apt-get install -y --no-install-recommends \
     clang-14 lldb-14 lld-14 libclang-14-dev && \
     # don't need Rust if using pre-build binaries from Foundry instead of building from source
+    # don't think minio is necessary
     # install specific minio client version (2023-04-06)
     curl -L "https://dl.min.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2023-04-06T16-51-10Z" -o /usr/local/bin/mc && \
     chmod 755 /usr/local/bin/mc && \
