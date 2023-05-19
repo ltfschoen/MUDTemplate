@@ -94,7 +94,7 @@ RUN apt-get -y update --fix-missing && \
     # install GRPCurl to interact with Store (embedded EVM database) for MUD
     curl -sSL "https://github.com/fullstorydev/grpcurl/releases/download/v1.8.7/grpcurl_1.8.7_linux_x86_64.tar.gz" | tar -xz -C /usr/local/bin
 
-COPY run.sh /opt
+COPY ./docker/run.sh /opt
 COPY snippets /opt/snippets
 
 EXPOSE 3000 8545

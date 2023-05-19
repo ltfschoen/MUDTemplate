@@ -3,10 +3,11 @@
 trap "echo; exit" INT
 trap "echo; exit" HUP
 
+PARENT_DIR=$( echo $(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")") )
 # assign fallback values for environment variables from .env.example incase
 # not declared in .env file. alternative approach is `echo ${X:=$X_FALLBACK}`
-source $(dirname "$0")/.env.example
-source $(dirname "$0")/.env
+source $PARENT_DIR/.env.example
+source $PARENT_DIR/.env
 
 printf "\n*** Started building Docker container."
 printf "\n*** Please wait... \n***"
@@ -14,20 +15,20 @@ printf "\n*** Please wait... \n***"
 # https://stackoverflow.com/a/25554904/3208553
 set +e
 bash -e <<TRY
-  docker build -f ./docker/Dockerfile ./
+  docker build -f ${PARENT_DIR}/docker/Dockerfile ./
 TRY
 if [ $? -ne 0 ]; then
 	printf "\n*** Detected error running 'docker build'. Trying 'docker buildx' instead...\n"
-	docker buildx build -f ./docker/Dockerfile ./
+	docker buildx build -f {PARENT_DIR}/docker/Dockerfile ./
 fi
 
 docker run -it -d \
-	--env-file "./.env" \
+	--env-file "${PARENT_DIR}/.env" \
 	--hostname foundry \
 	--name foundry \
 	--publish 0.0.0.0:8545:8545 \
 	--publish 0.0.0.0:3000:3000 \
-	--volume ${PWD}:/opt:rw \
+	--volume ${PARENT_DIR}:/opt:rw \
 	foundry:latest
 if [ $? -ne 0 ]; then
     kill "$PPID"; exit 1;

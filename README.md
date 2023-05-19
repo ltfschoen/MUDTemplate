@@ -25,11 +25,11 @@
 * Optional: Adding environment variables for use in the Docker container in .env, if necessary.
 * Build a Docker image and run a Docker container. 
   ```bash
-  ./docker.sh
+  ./docker/docker.sh
   ```
 * Run the following to run it in the Docker container to create a DApp using React.  
   ```bash
-  docker exec -it foundry ./run.sh my-project react MIT
+  docker exec -it foundry ./docker/run.sh my-project react MIT
   ```
   * Optional & Notes
     > Optional: Change `my-project` to your desired project name
@@ -40,14 +40,14 @@
 
     > Note: Run `docker exec -it foundry pnpm create mud@canary --help` to view other license option values and other command options to customize in the shell script, if required.
 * Open in web browser http://localhost:3000.
-  * View browser console logs.
+  * Wait until ready, when terminal logs output `[client] Local: http://localhost:3000/
   * Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads.
   * Optional & Notes
     > Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. To manually start the MUD v2 DApp change to the folder of your MUD v2 DApp and run it with `cd ./projects/my-project && pnpm run dev`. Note: Press CTRL+D to exit Docker container shell.
 
 ### Tips to configure Visual Studio Code <a id="vscode"></a>
 
-* Edit my-project/.vscode/settings.json if necessary. Note in run.sh we replace its contents with default values in the file ./snippets/content-settings.json
+* Edit my-project/.vscode/settings.json if necessary. Note in ./docker/run.sh we replace its contents with default values in the file ./snippets/content-settings.json
 
 * Verify that the Solidity version value specified in the following files for the following keys is the same (i.e. `0.8.x`). See https://github.com/foundry-rs/foundry/blob/58a272997516046fd745f4b3c37f91d0eb113358/config/src/lib.rs#L179
     * `solc_version` or `solc` ./projects/my-project/packages/contracts/foundry.toml
@@ -169,7 +169,7 @@
 
 * How to resolve CORS error `Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://127.0.0.1:8545/. (Reason: CORS request did not succeed). Status code: (null)`
   * Refer to solution here of running with `export ANVIL_IP_ADDR=0.0.0.0 && pnpm run dev` https://github.com/vitejs/vite/discussions/13240#discussioncomment-5934467
-  * Note that in the latest MUD v2 updates where they use `concurrently` instead of `run-pty` you will get CORS errors until the codegen phase is complete in the terminal logs, so keep refreshing the page until those errors disappear and the page loads
+  * Note that in the latest MUD v2 updates where they use `concurrently` instead of `run-pty` you would get CORS errors but we use `wait-port` so it only loads the DApp when port 8545 is ready.
 
 * How to configure CORS
   * The CORS configuration may include adding `"proxy": "http://<HOST>:<PORT>",` in a package.json file and updating <your-project>/packages/client/vite.config.ts with a `cors` configuration with keys and values like the below example and replacing <PORT> with an actual port. The below example is not intended to actually work. Refer to Vite.js configuration documentation for more information https://vitejs.dev/config/server-options.html#server-cors, and also https://github.com/http-party/node-http-proxy#options

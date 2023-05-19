@@ -3,7 +3,7 @@
 #================
 # accept arguments provided to shell script or use a fallback value
 #================
-# accept argument provided to shell script from calling `run.sh ${PROJECT_NAME}` in the Docker container
+# accept argument provided to shell script from calling `./docker/run.sh ${PROJECT_NAME}` in the Docker container
 PROJECT_NAME=$1
 FRONTEND_TEMPLATE=$2
 LICENSE=$3
@@ -17,6 +17,7 @@ echo "Creating a MUD v2 DApp with name ${PROJECT_NAME} in ${FRONTEND_TEMPLATE} w
 # generate the DApp with the given project name
 #================
 # create the project in a projects directory that we will create
+cd /opt
 mkdir -p projects && cd projects
 # add `PNPM_HOME="/root/.local/share/pnpm` to ~/.bashrc
 pnpm setup
@@ -54,15 +55,15 @@ NEW_VAL_2="concurrently -n contracts,client -c cyan,magenta \"cd packages/contra
 tmp2=$(mktemp)
 jq --arg new_value_2 "${NEW_VAL_2}" '.scripts.dev = $new_value_2' /opt/projects/${PROJECT_NAME}/package.json > "$tmp2" && mv "$tmp2" /opt/projects/${PROJECT_NAME}/package.json
 
-================
-update Vite.js DApp by injecting the snippet of CORS code that is in the file
-content-cors.txt into the file /opt/projects/${PROJECT_NAME}/packages/client/vite.config.ts
-specifically after matching some text like `server: {`
-================
-search for the file /opt/projects/${PROJECT_NAME}/packages/client/vite.config.ts
-insert the contents of file content-cors.txt into that vite.config.ts file immediately after
-the line that contains the text `server: {` and preserve indentation
-https://unix.stackexchange.com/questions/446527/how-to-insert-file-content-after-a-certain-string-in-a-file
+# ================
+# update Vite.js DApp by injecting the snippet of CORS code that is in the file
+# content-cors.txt into the file /opt/projects/${PROJECT_NAME}/packages/client/vite.config.ts
+# specifically after matching some text like `server: {`
+# ================
+# search for the file /opt/projects/${PROJECT_NAME}/packages/client/vite.config.ts
+# insert the contents of file content-cors.txt into that vite.config.ts file immediately after
+# the line that contains the text `server: {` and preserve indentation
+# https://unix.stackexchange.com/questions/446527/how-to-insert-file-content-after-a-certain-string-in-a-file
 ed -s /opt/projects/${PROJECT_NAME}/packages/client/vite.config.ts <<END_ED
 /server: {/r !sed 's/^/    /' /opt/snippets/content-cors.txt
 wq
