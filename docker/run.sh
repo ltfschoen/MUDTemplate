@@ -1,14 +1,13 @@
 #!/bin/bash
 
 #================
-# accept arguments provided to shell script or use a fallback value
+# use environment variables set in Dockerfile or use a fallback value
 #================
-# accept argument provided to shell script from calling `./docker/run.sh ${PROJECT_NAME}` in the Docker container
-PROJECT_NAME=$1
-FRONTEND_TEMPLATE=$2
-LICENSE=$3
+PROJECT_NAME=${PROJECT_NAME}
+FRONTEND_TEMPLATE=${FRONTEND_TEMPLATE}
+LICENSE=${LICENSE}
 FALLBACK_PROJECT_NAME=my-project
-# assign fallback value incase not provided as argument to this shell script
+# assign fallback value incase not provided as environment variable
 # https://stackoverflow.com/a/4437588/3208553
 : ${PROJECT_NAME:=$FALLBACK_PROJECT_NAME}
 echo "Creating a MUD v2 DApp with name ${PROJECT_NAME} in ${FRONTEND_TEMPLATE} with license ${LICENSE}"
@@ -41,7 +40,11 @@ cd ${PROJECT_NAME}
 # `"dev": "vite",`. note: This exposes the DApp in in the Docker container for access from the
 # host machine. See https://github.com/vitejs/vite/issues/12557 and https://github.com/latticexyz/mud/issues/859
 
-HOST="0.0.0.0"
+HOST=${ANVIL_IP_ADDR}
+FALLBACK_HOST="0.0.0.0"
+# assign fallback value incase not available as environment variable
+: ${HOST:=$FALLBACK_HOST}
+
 NEW_VAL_1="vite --host ${HOST}"
 # https://stackoverflow.com/a/66954991/3208553
 # search for ./projects/${PROJECT_NAME}/packages/client/package.json

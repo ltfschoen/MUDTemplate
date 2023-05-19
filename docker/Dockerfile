@@ -23,7 +23,10 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH \
     CC=clang-14 \
     CXX=clang-14 \
-    ANVIL_IP_ADDR=0.0.0.0
+    ANVIL_IP_ADDR=${ANVIL_IP_ADDR} \
+    PROJECT_NAME=${PROJECT_NAME} \
+    FRONTEND_TEMPLATE=${FRONTEND_TEMPLATE} \
+    LICENSE=${LICENSE}
 
 # don't need Rust if using pre-build binaries from Foundry instead of building from source
 RUN export TARGETARCH=arm64 && echo "export CFLAGS=-mno-outline-atomics" >> $HOME/.profile || true

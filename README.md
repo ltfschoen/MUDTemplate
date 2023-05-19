@@ -1,4 +1,4 @@
-# MUD v2 DApp (using Docker)
+# MUD v2 DApp Template (using Docker)
 ============
 
 ## Table of Contents
@@ -13,37 +13,31 @@
 ### Create New Project <a id="create-new-project"></a>
 
 * Install [Docker](https://docs.docker.com/get-docker/)
-* Fork and/or clone repo. If you fork then replace with your fork link below 
+* Fork and clone repo. Replace `ltfschoen` below with your Github username to clone your fork.
+  ```bash
+  git clone https://github.com/ltfschoen/MUDTemplate && cd MUDTemplate
   ```
-  git clone https://github.com/ltfschoen/MUDTest
-  cd MUDTest
-  ```
-* Run the following:
+* Generate .env file from .env.example and review its instructions.
   ```bash
   touch .env && cp .env.example .env
   ```
-* Optional: Adding environment variables for use in the Docker container in .env, if necessary.
-* Build a Docker image and run a Docker container. 
+* Configure DApp by modifying .env file, if desired.
+* Build a Docker image and run a Docker container to create a DApp according to configuration in .env file.
   ```bash
   ./docker/docker.sh
   ```
-* Run the following to run it in the Docker container to create a DApp using React.  
-  ```bash
-  docker exec -it foundry ./docker/run.sh my-project react MIT
-  ```
-  * Optional & Notes
-    > Optional: Change `my-project` to your desired project name
+* Wait... until terminal logs output `[client] Local: http://localhost:3000/`
+* Open http://localhost:3000 in web browser to load MUD v2 DApp.
 
-    > Optional: Change `vanilla` to an alternative frontend template format (e.g. `phaser` or `react`).
+#### Restart Existing Project
 
-    > Optional: Change `MIT` to desired license.
-
-    > Note: Run `docker exec -it foundry pnpm create mud@canary --help` to view other license option values and other command options to customize in the shell script, if required.
-* Open in web browser http://localhost:3000.
-  * Wait until ready, when terminal logs output `[client] Local: http://localhost:3000/
-  * Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads.
-  * Optional & Notes
-    > Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. To manually start the MUD v2 DApp change to the folder of your MUD v2 DApp and run it with `cd ./projects/my-project && pnpm run dev`. Note: Press CTRL+D to exit Docker container shell.
+* Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`.
+* To manually start the MUD v2 DApp switch to the folder of your MUD v2 DApp and run it with:
+```bash
+cd /opt/projects/my-project
+pnpm run dev
+```
+* Press CTRL+D to exit Docker container shell.
 
 ### Tips to configure Visual Studio Code <a id="vscode"></a>
 
@@ -138,6 +132,8 @@
   * Run `pnpm mud set-version -v canary` in both the client and contracts package of your project then run `pnpm install` at the root to update your project to the latest canary version
 
 ### Tips when Troubleshooting <a id="troubleshooting"></a>
+
+**Please create an issue by clicking [here](https://github.com/ltfschoen/MUDTemplate/issues) and describing the error and upload a screenshot of any errors.**
 
 * How to resolve PNPM global bin directory error
   * If you get the following error when running `pnpm run dev`, then it may be because you previously built the files on a host machine and copied them to a Docker container.
