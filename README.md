@@ -13,15 +13,11 @@
 ### Create New Project <a id="create-new-project"></a>
 
 * Install [Docker](https://docs.docker.com/get-docker/)
-* Fork and clone repo. Replace `ltfschoen` below with your Github username to clone your fork.
+* Fork and/or clone repo.
   ```bash
   git clone https://github.com/ltfschoen/MUDTemplate && cd MUDTemplate
   ```
-* Generate .env file from .env.example and review its instructions.
-  ```bash
-  touch .env && cp .env.example .env
-  ```
-* Configure DApp by modifying .env file, if desired.
+* Configure DApp by generating a .env file from the .env.example file by following its instructions, if desired.
 * Build a Docker image and run a Docker container to create a DApp according to configuration in .env file.
   ```bash
   ./docker/docker.sh
