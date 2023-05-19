@@ -14,32 +14,38 @@
 
 * Install [Docker](https://docs.docker.com/get-docker/)
 * Fork and/or clone repo. If you fork then replace with your fork link below 
-```
-git clone https://github.com/ltfschoen/MUDTest
-cd MUDTest
-```
+  ```
+  git clone https://github.com/ltfschoen/MUDTest
+  cd MUDTest
+  ```
 * Run the following:
-```bash
-touch .env && cp .env.example .env
-```
+  ```bash
+  touch .env && cp .env.example .env
+  ```
 * Optional: Adding environment variables for use in the Docker container in .env, if necessary.
 * Build a Docker image and run a Docker container. 
-```bash
-./docker.sh
-```
-* Run the following to run it in the Docker container to create a DApp using React. 
-  * Optionally change `my-project` to your desired project name
-  * Optionally change `vanilla` to an alternative frontend template format (e.g. `phaser` or `react`).
-  * Optionally Change `MIT` to desired license.
-  * Note: Run `docker exec -it foundry pnpm create mud@canary --help` to view other license option values and other command options to customize in the shell script, if required. 
-```bash
-docker exec -it foundry ./run.sh my-project react MIT
-```
-* Open in web browser http://localhost:3000
-* View browser console logs. Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads... 
-  * Note: The delay and any temporary CORS errors appear to be caused by this issue https://github.com/latticexyz/mud/issues/916)
+  ```bash
+  ./docker.sh
+  ```
+* Run the following to run it in the Docker container to create a DApp using React.  
+  ```bash
+  docker exec -it foundry ./run.sh my-project react MIT
+  ```
+  * Optional & Notes
+    > Optional: Change `my-project` to your desired project name
 
-* Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. Note: Press CTRL+D to exit Docker container shell.
+    > Optional: Change `vanilla` to an alternative frontend template format (e.g. `phaser` or `react`).
+
+    > Optional: Change `MIT` to desired license.
+
+    > Note: Run `docker exec -it foundry pnpm create mud@canary --help` to view other license option values and other command options to customize in the shell script, if required.
+* Open in web browser http://localhost:3000.
+  * View browser console logs.
+  * Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads. 
+  * Optional & Notes
+    > Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. Note: Press CTRL+D to exit Docker container shell.
+
+    > Note: The delay and any temporary CORS errors appear to be caused by this issue https://github.com/latticexyz/mud/issues/916)
 
 ### Tips to configure Visual Studio Code <a id="vscode"></a>
 
@@ -53,44 +59,46 @@ docker exec -it foundry ./run.sh my-project react MIT
 ### Tips for Docker <a id="docker-tips"></a>
 
 * Delete Docker Container 
-```
-docker stop foundry && docker rm foundry
-```
+  ```
+  docker stop foundry && docker rm foundry
+  ```
 * Show Docker Containers
-```bash
-docker ps -a
-```
+  ```bash
+  docker ps -a
+  ```
 * Show Docker Images
-```bash
-docker images
-```
+  ```bash
+  docker images
+  ```
 * Previous Docker container
-```
-CONTAINER_ID=$(docker ps -n=1 -q)
-echo $CONTAINER_ID
-```
+  ```bash
+  CONTAINER_ID=$(docker ps -n=1 -q)
+  echo $CONTAINER_ID
+  ```
 * Show IP address. This may be provided as an environment variable with `-e` option
-```
-HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
-echo $HOST_IP
-```
+  ```bash
+  HOST_IP=$(ip route get 1 | sed -n 's/^.*src \([0-9.]*\) .*$/\1/p')
+  echo $HOST_IP
+  ```
 * [Check IP Address macOS](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach)
-```
-brew install iproute2mac
-```
+  ```bash
+  brew install iproute2mac
+  ```
 * Show bridge IP address
-```bash
-docker network inspect bridge | grep Gateway
-```
-* Note: It is not necessary to use `--add-host=host.docker.internal:host-gateway` or `expose <PORT>`
-* Do not try to use `--network host` on macOS, since _"The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server."_
+  ```bash
+  docker network inspect bridge | grep Gateway
+  ```
+
+> Note: It is not necessary to use `--add-host=host.docker.internal:host-gateway` or `expose <PORT>`
+
+> Note: Do not try to use `--network host` on macOS, since _"The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for Windows Server."_
 
 ### Tips for Lattice, MUD, and Foundry<a id="misc-notes"></a>
 
 #### Definitions
 
-  * MODE - is a service that mirrors the state of a Store in a Postgres database. Clients query directly without requiring Ethereum JSON-RPC
-  * MUD - able to reconstruct the state of Store in the browser using a JSON-RPC or a MODE
+* MODE - is a service that mirrors the state of a Store in a Postgres database. Clients query directly without requiring Ethereum JSON-RPC
+* MUD - able to reconstruct the state of Store in the browser using a JSON-RPC or a MODE
 
 #### Faucet
 
