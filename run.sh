@@ -48,7 +48,9 @@ NEW_VAL_1="vite --host ${HOST}"
 tmp=$(mktemp)
 jq --arg new_value "${NEW_VAL_1}" '.scripts.dev = $new_value' /opt/projects/${PROJECT_NAME}/packages/client/package.json > "$tmp" && mv "$tmp" /opt/projects/${PROJECT_NAME}/packages/client/package.json
 
-NEW_VAL_2="concurrently -n contracts,client -c cyan,magenta \"cd packages/contracts && export ANVIL_IP_ADDR=${HOST} && pnpm run dev\" \"cd packages/client && export ANVIL_IP_ADDR=${HOST} && pnpm run dev\""
+pnpm install -g wait-port
+
+NEW_VAL_2="concurrently -n contracts,client -c cyan,magenta \"cd packages/contracts && export ANVIL_IP_ADDR=${HOST} && pnpm run dev\" \"cd packages/client && wait-port localhost:8545 && export ANVIL_IP_ADDR=${HOST} && pnpm run dev\""
 tmp2=$(mktemp)
 jq --arg new_value_2 "${NEW_VAL_2}" '.scripts.dev = $new_value_2' /opt/projects/${PROJECT_NAME}/package.json > "$tmp2" && mv "$tmp2" /opt/projects/${PROJECT_NAME}/package.json
 

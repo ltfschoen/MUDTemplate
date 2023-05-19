@@ -41,11 +41,9 @@
     > Note: Run `docker exec -it foundry pnpm create mud@canary --help` to view other license option values and other command options to customize in the shell script, if required.
 * Open in web browser http://localhost:3000.
   * View browser console logs.
-  * Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads. 
+  * Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads.
   * Optional & Notes
-    > Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. Note: Press CTRL+D to exit Docker container shell.
-
-    > Note: The delay and any temporary CORS errors appear to be caused by this issue https://github.com/latticexyz/mud/issues/916)
+    > Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. To manually start the MUD v2 DApp change to the folder of your MUD v2 DApp and run it with `cd ./projects/my-project && pnpm run dev`. Note: Press CTRL+D to exit Docker container shell.
 
 ### Tips to configure Visual Studio Code <a id="vscode"></a>
 
