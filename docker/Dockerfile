@@ -42,7 +42,7 @@ RUN apt-get -y update --fix-missing && \
     libssl-dev make cmake graphviz \
     git pkg-config curl time rhash ca-certificates jq \
     python3 python3-pip lsof ruby ruby-bundler git-restore-mtime xz-utils zstd unzip gnupg protobuf-compiler && \
-    apt-get install -y vim wget net-tools iptables iproute2 iputils-ping && \
+    apt-get install -y vim wget net-tools iptables iproute2 iputils-ping ed && \
     # don't need Rust if using pre-build binaries from Foundry instead of building from source
     # add clang 14 repo
     echo "deb http://apt.llvm.org/${DEBIAN_CODENAME}/ llvm-toolchain-${DEBIAN_CODENAME}-14 main" >> /etc/apt/sources.list.d/llvm-toolchain-${DEBIAN_CODENAME}-14.list; \
@@ -93,6 +93,9 @@ RUN apt-get -y update --fix-missing && \
     npm install pnpm --global && \
     # install GRPCurl to interact with Store (embedded EVM database) for MUD
     curl -sSL "https://github.com/fullstorydev/grpcurl/releases/download/v1.8.7/grpcurl_1.8.7_linux_x86_64.tar.gz" | tar -xz -C /usr/local/bin
+
+COPY run.sh /opt
+COPY snippets /opt/snippets
 
 EXPOSE 3000 8545
 
