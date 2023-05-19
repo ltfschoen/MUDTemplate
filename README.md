@@ -36,7 +36,8 @@ touch .env && cp .env.example .env
 docker exec -it foundry ./run.sh my-project react MIT
 ```
 * Open in web browser http://localhost:3000
-* View browser console logs. Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads...
+* View browser console logs. Inspect Docker container terminal logs for any errors. Refresh and wait patiently until it loads... 
+  * Note: The delay and any temporary CORS errors appear to be caused by this issue https://github.com/latticexyz/mud/issues/916)
 
 * Optional: Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`. Note: Press CTRL+D to exit Docker container shell.
 
