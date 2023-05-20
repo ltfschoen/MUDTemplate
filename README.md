@@ -10,7 +10,7 @@
   * [Tips when Troubleshooting](#troubleshooting)
   * [Tips with Links](#links-unsorted)
 
-### Create New Project <a id="create-new-project"></a>
+### Create First Project <a id="create-new-project"></a>
 
 * Install [Docker](https://docs.docker.com/get-docker/)
 * Fork and/or clone repo.
@@ -27,13 +27,35 @@
 
 #### Restart Existing Project
 
-* Enter the Docker container shell with `docker exec -it foundry /bin/bash`. It should display a prompt `root@foundry:/opt#`.
+* Enter the Docker container shell with the following. It should display a prompt `root@foundry:/opt#`.
+  ```bash
+  docker exec -it foundry /bin/bash
+  ```
 * To manually start the MUD v2 DApp switch to the folder of your MUD v2 DApp and run it with:
-```bash
-cd /opt/projects/my-project
-pnpm run dev
-```
+  ```bash
+  cd /opt/projects/my-project
+  pnpm run dev
+  ```
 * Press CTRL+D to exit Docker container shell.
+
+#### Create Additional Projects
+
+* Option 1
+  * Run
+    ```bash
+    docker exec -it foundry ./docker/run.sh <PROJECT_NAME> <TEMPLATE> <LICENSE>
+    ```
+* Option 2
+  * Enter the Docker container shell with the following. It should display a prompt `root@foundry:/opt#`.
+    ```bash
+    docker exec -it foundry /bin/bash
+    ```
+  * Create a MUD v2 DApp by running:
+    ```bash
+    /opt/docker/run.sh <PROJECT_NAME> <TEMPLATE> <LICENSE>`
+    ```
+  * Press CTRL+D to exit Docker container shell.
+> Note: See .env.example for possible values to use for `<PROJECT_NAME>`, `<TEMPLATE>`, and `<LICENSE>`.
 
 ### Tips to configure Visual Studio Code <a id="vscode"></a>
 

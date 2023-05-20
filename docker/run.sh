@@ -1,15 +1,30 @@
 #!/bin/bash
 
 #================
+# check for arguments first. if not arguments provided then
 # use environment variables set in Dockerfile or use a fallback value
 #================
-PROJECT_NAME=${PROJECT_NAME}
-FRONTEND_TEMPLATE=${FRONTEND_TEMPLATE}
-LICENSE=${LICENSE}
+
+# args
+PROJECT_NAME=$1
+FRONTEND_TEMPLATE=$2
+LICENSE=$3
+
+# env variables
+if [[ ! -z "$PROJECT_NAME" && ! -z "$FRONTEND_TEMPLATE" && ! -z "$LICENSE" ]]; then
+    PROJECT_NAME=${PROJECT_NAME}
+    FRONTEND_TEMPLATE=${FRONTEND_TEMPLATE}
+    LICENSE=${LICENSE}
+fi
+
 FALLBACK_PROJECT_NAME=my-project
+FALLBACK_FRONTEND_TEMPLATE=vanilla
+FALLBACK_LICENSE=MIT
 # assign fallback value incase not provided as environment variable
 # https://stackoverflow.com/a/4437588/3208553
 : ${PROJECT_NAME:=$FALLBACK_PROJECT_NAME}
+: ${FRONTEND_TEMPLATE:=$FALLBACK_FRONTEND_TEMPLATE}
+: ${LICENSE:=$FALLBACK_LICENSE}
 echo "Creating a MUD v2 DApp with name ${PROJECT_NAME} in ${FRONTEND_TEMPLATE} with license ${LICENSE}"
 
 #================
