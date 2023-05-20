@@ -52,7 +52,7 @@
     ```
   * Create a MUD v2 DApp by running:
     ```bash
-    /opt/docker/run.sh <PROJECT_NAME> <TEMPLATE> <LICENSE>`
+    /opt/docker/run.sh <PROJECT_NAME> <TEMPLATE> <LICENSE>
     ```
   * Press CTRL+D to exit Docker container shell.
 > Note: See .env.example for possible values to use for `<PROJECT_NAME>`, `<TEMPLATE>`, and `<LICENSE>`.
