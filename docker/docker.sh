@@ -6,10 +6,14 @@ trap "echo; exit" HUP
 PARENT_DIR=$( echo $(dirname "$(dirname "$(realpath "${BASH_SOURCE[0]}")")") )
 # generate .env file from .env.example if it does not exist
 # https://stackoverflow.com/a/47677632/3208553
-(ls .env >> /dev/null 2>&1 && {
+if [ -e .env ]
+then
+    echo ".env file exists"
+else
 	echo "generating .env file from .env.example since it does not exist";
 	touch .env && cp .env.example .env;
-}) || echo ".env file exists"
+fi
+
 # assign fallback values for environment variables from .env.example incase
 # not declared in .env file. alternative approach is `echo ${X:=$X_FALLBACK}`
 source $PARENT_DIR/.env.example
