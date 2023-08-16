@@ -25,11 +25,11 @@ printf "\n*** Please wait... \n***"
 # https://stackoverflow.com/a/25554904/3208553
 set +e
 bash -e <<TRY
-  docker build -f ${PARENT_DIR}/docker/Dockerfile ./
+  docker build -f ${PARENT_DIR}/docker/Dockerfile -t foundry:latest ./
 TRY
 if [ $? -ne 0 ]; then
 	printf "\n*** Detected error running 'docker build'. Trying 'docker buildx' instead...\n"
-	docker buildx build -f {PARENT_DIR}/docker/Dockerfile ./
+	docker buildx build -f {PARENT_DIR}/docker/Dockerfile -t foundry:latest ./
 fi
 
 docker run -it -d \
